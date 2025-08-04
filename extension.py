@@ -12,11 +12,26 @@ def connectToJobSite(func):
         Returns:
             function: The wrapped function with HTML content from the provided URL.
     """
-    def inner(URL):
-        page = requests.get(URL)
-        content = BeautifulSoup(page.content, "html.parser")
-        scraper = func(content) 
-        print(f"The {func.__name__} is executed successfully")
-        
-        return scraper
+    def inner(URL, currentPage):
+        try:
+            
+            if "jobberman" in URL:
+                URL = f"https://www.jobberman.com/jobs?page={currentPage}"
+            elif "myjobmybag" in URL:
+                URL = f"https://www.myjobmag.com/jobs/page/{currentPage}"
+            
+            # scraper = func(URL) 
+            # page = requests.get(scraper)
+            # content = BeautifulSoup(page.content, "html.parser")
+            # print(f"The {content.__name__} is executed successfully")
+            
+                
+            page = requests.get(URL)
+            content = BeautifulSoup(page.content, "html.parser")
+            scraper = func(content) 
+            print(f"The {func.__name__} is executed successfully")
+            return scraper
+            
+        except Exception as e:
+            print("An Error Occured!",e)
     return inner
