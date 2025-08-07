@@ -1,6 +1,9 @@
 from bs4 import BeautifulSoup
 import requests
 
+
+MAX_PAGES = 5
+
 def connectToJobSite(func):
     
     """
@@ -17,15 +20,9 @@ def connectToJobSite(func):
             
             if "jobberman" in URL:
                 URL = f"https://www.jobberman.com/jobs?page={currentPage}"
-            elif "myjobmybag" in URL:
+            elif "myjobmag" in URL:
                 URL = f"https://www.myjobmag.com/jobs/page/{currentPage}"
             
-            # scraper = func(URL) 
-            # page = requests.get(scraper)
-            # content = BeautifulSoup(page.content, "html.parser")
-            # print(f"The {content.__name__} is executed successfully")
-            
-                
             page = requests.get(URL)
             content = BeautifulSoup(page.content, "html.parser")
             scraper = func(content) 

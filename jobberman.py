@@ -1,4 +1,4 @@
-from extension import connectToJobSite
+from extension import connectToJobSite, MAX_PAGES
 import pandas as pd 
 pd.set_option('display.max_columns', 10)
 
@@ -30,7 +30,7 @@ def jobberMan(content, currentPage=1):
     job_cards = content.find_all(attrs={"data-cy" : "listing-cards-components"})
     jobs = []
 
-    while currentPage <= 5:
+    while currentPage <= 1:
         try:
             for job in job_cards:
                 posted_at = job.find("p", class_="ml-auto text-sm font-normal text-gray-700 text-loading-animate")
@@ -59,6 +59,5 @@ def jobberMan(content, currentPage=1):
     return pd.DataFrame(jobs)
         
 
-jobs =  jobberMan("https://www.jobberman.com/jobs", 3)
-# jobs =  jobberMan(f"https://www.jobberman.com/jobs")
-print(jobs)
+jobberman =  jobberMan("https://www.jobberman.com/jobs", 3)
+# print(jobs)

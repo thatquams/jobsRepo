@@ -1,19 +1,11 @@
-from extension import connectToJobSite
+from extension import connectToJobSite, MAX_PAGES
 import pandas as pd 
 import requests
 from bs4 import BeautifulSoup
 pd.set_option('display.max_columns', 10)
 
-
-# title: string;
-# company: string;
-# location: string;
-# link: string;
-# source: string;
-# timestamp: string;
-
 @connectToJobSite
-def myJobMyBag(content, currentPage=1):
+def myJobMag(content, currentPage=1):
     
     """
         Scrapes job listings from MyJobMag.com for up to 5 pages.
@@ -34,7 +26,7 @@ def myJobMyBag(content, currentPage=1):
     jobListings = content.find("ul", class_="job-list")
     jobs = []
     
-    while currentPage <= 5:
+    while currentPage <= 1:
         
         try:
             
@@ -52,20 +44,20 @@ def myJobMyBag(content, currentPage=1):
                         job_soup = BeautifulSoup(response.content, "html.parser")
                 
                         titleElement = job_soup.find("ul", class_="read-h1").find("li").find("h1").text 
-                        title = titleElement.split("at")[0].strip()
-                        company = titleElement.split("at")[1].strip()
-                        location = job_soup.find("span", class_="jkey-info").text.strip()
-                        posted_at = job_soup.find("div", id="posted-date").text.strip()
+                        title = titleElement.split(" at")[0].strip()
+                        company = titleElement.split("at ", 1)[-1].strip()
+                        location = job_soup.find_all("span", class_="jkey-info")[3].text.strip()
+                        posted_at = job_soup.find("div", id="posted-date").text.split(":")[-1].strip()
                         source = source
                         
                         jobs.append({
-                        "title": title,
-                        "company": company,
-                        "posted_at": posted_at,
-                        "location": location,
-                        "href": href,
-                        "source": source
-                    })
+                            "title": title,
+                            "company": company,
+                            "posted_at": posted_at,
+                            "location": location,
+                            "href": href,
+                            "source": source
+                        })
             
         except Exception as e:
             print(f"Error parsing job card: {e}")
@@ -75,5 +67,5 @@ def myJobMyBag(content, currentPage=1):
     return pd.DataFrame(jobs)
 
         
-result = myJobMyBag("https://www.myjobmag.com/jobs", 1)
-print(result)
+myjobmag = myJobMag("https://www.myjobmag.com/jobs", 1)
+# print(result)
