@@ -1,5 +1,5 @@
-from jobberman import jobberman
-from myjobmag import myjobmag
+from .jobberman import jobberman
+from .myjobmag import myjobmag
 import pandas as pd 
 
 
@@ -22,4 +22,3 @@ def dataIntegration(**datasets):
 
 
 combined_df = dataIntegration(jobberman=jobberman, myjobmag=myjobmag)
-print(combined_df)

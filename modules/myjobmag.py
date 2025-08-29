@@ -1,4 +1,4 @@
-from extension import connectToJobSite, MAX_PAGES
+from .extension import connectToJobSite, MAX_PAGES
 import pandas as pd 
 import requests
 from bs4 import BeautifulSoup
@@ -59,7 +59,7 @@ def myJobMag(content, currentPage=1):
                             "source": source
                         })
             
-        except Exception as e:
+        except requests.exceptions.HTTPError as e:
             print(f"Error parsing job card: {e}")
         
         currentPage += 1    
